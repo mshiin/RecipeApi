@@ -1,0 +1,7 @@
+notes.md
+.history
+.vscode
+
+# Ignore bin and obj folders everywhere
+**/bin/
+**/obj/
