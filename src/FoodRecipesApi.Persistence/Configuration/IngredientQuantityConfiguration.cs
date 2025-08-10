@@ -17,8 +17,8 @@ namespace FoodRecipesApi.Persistence.Configuration
                 .HasForeignKey<IngredientQuantity>(i => i.IngredientId)
                 .IsRequired();
 
-            builder.HasOne(iq => iq.MeasurementUnit)
-                .WithOne(mu => mu.IngredientQuantity)
+            builder.HasOne(iq => iq.MeasurementUnit) // each IngredientQuantity has ONE MeasurementUnit
+                .WithOne(mu => mu.IngredientQuantity) // each MeasurementUnit has ONE IngredientQuantity
                 .HasForeignKey<IngredientQuantity>(iq => iq.MeasurementUnitId);
             }
         }
