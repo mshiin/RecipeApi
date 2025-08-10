@@ -11,5 +11,7 @@ namespace FoodRecipesApi.Core.Common.Interfaces
     {
         DbSet<Recipe> Recipes { get; set; }
         DbSet<Author> Authors { get; set; }
+
+        int SaveChanges();
     } 
 }
