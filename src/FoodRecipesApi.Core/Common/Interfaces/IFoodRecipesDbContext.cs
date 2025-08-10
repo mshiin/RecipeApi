@@ -10,5 +10,6 @@ namespace FoodRecipesApi.Core.Common.Interfaces
     public interface IFoodRecipesDbContext
     {
         DbSet<Recipe> Recipes { get; set; }
+        DbSet<Author> Authors { get; set; }
     } 
 }
