@@ -13,7 +13,7 @@ namespace FoodRecipesApi.Persistence
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             var connection = configuration.GetConnectionString("FoodRecipesDB")
-                 ?? throw new InvalidOperationException("Missing connection string 'FoodRecipesDB'.");
+                ?? throw new InvalidOperationException("Missing connection string 'FoodRecipesDB'.");
 
 
             services.AddDbContext<FoodRecipesDbContext>(options =>
