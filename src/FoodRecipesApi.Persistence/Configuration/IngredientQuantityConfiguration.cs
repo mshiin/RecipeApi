@@ -10,16 +10,16 @@ namespace FoodRecipesApi.Persistence.Configuration
 {
         class IngredientQuantityConfiguration : IEntityTypeConfiguration<IngredientQuantity>
         {
-            public void Configure(EntityTypeBuilder<IngredientQuantity> builder)
-            {
-                builder.HasOne(iq => iq.Ingredient) // each IngredientQuantity has ONE Ingredient
-                    .WithOne(i => i.Quantity) // each Ingredient has ONE IngredientQuantity
-                    .HasForeignKey<IngredientQuantity>(i => i.IngredientId)
-                    .IsRequired();
+        public void Configure(EntityTypeBuilder<IngredientQuantity> builder)
+        {
+            builder.HasOne(iq => iq.Ingredient) // each IngredientQuantity has ONE Ingredient
+                .WithOne(i => i.Quantity) // each Ingredient has ONE IngredientQuantity
+                .HasForeignKey<IngredientQuantity>(i => i.IngredientId)
+                .IsRequired();
 
-                builder.Property(iq => iq.MeasurementUnit)
-                    .HasMaxLength(20)
-                    .IsRequired();
+            builder.HasOne(iq => iq.MeasurementUnit)
+                .WithOne(mu => mu.IngredientQuantity)
+                .HasForeignKey<IngredientQuantity>(iq => iq.MeasurementUnitId);
             }
         }
     }
