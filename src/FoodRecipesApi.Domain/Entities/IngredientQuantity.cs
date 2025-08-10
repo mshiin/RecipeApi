@@ -8,6 +8,9 @@ namespace FoodRecipesApi.Domain.Entities
     public class IngredientQuantity
     {
         public int IngredientQuantityId { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public float Amount { get; set; }
+        public string MeasurementUnit { get; set; } = string.Empty;
+        public Ingredient? Ingredient { get; set; }
+        public int IngredientId { get; set; }
     }
 }
