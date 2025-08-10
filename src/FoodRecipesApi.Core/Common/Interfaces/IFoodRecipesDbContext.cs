@@ -7,7 +7,7 @@ using FoodRecipesApi.Domain.Entities;
 
 namespace FoodRecipesApi.Core.Common.Interfaces
 {
-    interface IFoodRecipesDbContext
+    public interface IFoodRecipesDbContext
     {
         DbSet<Recipe> Recipes { get; set; }
     } 
