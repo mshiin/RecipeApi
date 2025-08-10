@@ -12,8 +12,8 @@ namespace FoodRecipesApi.Persistence.Configuration
         {
             public void Configure(EntityTypeBuilder<IngredientQuantity> builder)
             {
-                builder.HasOne(iq => iq.Ingredient)
-                    .WithOne(i => i.Quantity)
+                builder.HasOne(iq => iq.Ingredient) // each IngredientQuantity has ONE Ingredient
+                    .WithOne(i => i.Quantity) // each Ingredient has ONE IngredientQuantity
                     .HasForeignKey<IngredientQuantity>(i => i.IngredientId)
                     .IsRequired();
 
