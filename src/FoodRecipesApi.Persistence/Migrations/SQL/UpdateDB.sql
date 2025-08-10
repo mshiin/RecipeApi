@@ -78,6 +78,36 @@ CREATE INDEX [IX_RecipeStep_RecipeId] ON [RecipeStep] ([RecipeId]);
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20250810103549_InitialCreate', N'9.0.0');
 
+DECLARE @var0 sysname;
+SELECT @var0 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[IngredientQuantity]') AND [c].[name] = N'MeasurementUnit');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [IngredientQuantity] DROP CONSTRAINT [' + @var0 + '];');
+ALTER TABLE [IngredientQuantity] DROP COLUMN [MeasurementUnit];
+
+EXEC sp_rename N'[Recipes].[TotalTime]', N'TotalTimeInMinutes', 'COLUMN';
+
+EXEC sp_rename N'[Recipes].[PreparationTime]', N'PreparationTimeInMinutes', 'COLUMN';
+
+ALTER TABLE [IngredientQuantity] ADD [MeasurementUnitId] int NOT NULL DEFAULT 0;
+
+CREATE TABLE [MeasurementUnit] (
+    [MeasurementUnitId] int NOT NULL IDENTITY,
+    [Unit] nvarchar(15) NOT NULL,
+    [IngredientQuantityId] int NOT NULL,
+    CONSTRAINT [PK_MeasurementUnit] PRIMARY KEY ([MeasurementUnitId]),
+    CONSTRAINT [FK_MeasurementUnit_IngredientQuantity_IngredientQuantityId] FOREIGN KEY ([IngredientQuantityId]) REFERENCES [IngredientQuantity] ([IngredientQuantityId]) ON DELETE CASCADE
+);
+
+CREATE UNIQUE INDEX [IX_MeasurementUnit_IngredientQuantityId] ON [MeasurementUnit] ([IngredientQuantityId]);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250810111111_SetAuthorBornPropColToTypeDate', N'9.0.0');
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250810111838_AddMeasurementUnitTableAndChangedTheRecipeTimesType', N'9.0.0');
+
 COMMIT;
 GO
 

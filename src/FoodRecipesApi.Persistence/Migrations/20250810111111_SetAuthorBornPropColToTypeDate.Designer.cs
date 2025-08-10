@@ -4,6 +4,7 @@ using FoodRecipesApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodRecipesApi.Persistence.Migrations
 {
     [DbContext(typeof(FoodRecipesDbContext))]
-    partial class FoodRecipesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250810111111_SetAuthorBornPropColToTypeDate")]
+    partial class SetAuthorBornPropColToTypeDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
