@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodRecipesApi.Core\FoodRecipesApi.Core.csproj" />
+    <ProjectReference Include="..\FoodRecipesApi.Core\FoodRecipesApi.Application.csproj" />
     <ProjectReference Include="..\FoodRecipesApi.Domain\FoodRecipesApi.Domain.csproj" />
   </ItemGroup>
 
