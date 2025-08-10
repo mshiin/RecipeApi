@@ -14,10 +14,13 @@ namespace FoodRecipesApi.Persistence.Configuration
         {
             builder.HasOne(r => r.Author) // each Recipe has ONE author
                 .WithMany(a => a.Recipes) // each author has MANY recipes
+                .HasForeignKey(r => r.AuthorId)
                 .IsRequired();
 
             builder.HasMany(r => r.RecipeSteps) // each Recipe has MANY RecipeStep
                 .WithOne(rs => rs.Recipe) // each RecipeStep has ONE Recipe
+                .HasForeignKey(rs => rs.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
             builder.Property(r => r.Title)
                 .HasMaxLength(30)
@@ -25,9 +28,9 @@ namespace FoodRecipesApi.Persistence.Configuration
             builder.Property(r => r.Description)
                 .HasMaxLength(500)
                 .IsRequired();
-            builder.Property(r => r.PreparationTime)
+            builder.Property(r => r.PreparationTimeInMinutes)
                 .IsRequired();
-            builder.Property(r => r.TotalTime)
+            builder.Property(r => r.TotalTimeInMinutes)
                 .IsRequired();
             builder.Property(r => r.ImageUrl)
                 .HasMaxLength(100)
