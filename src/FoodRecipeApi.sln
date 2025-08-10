@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodRecipesApi.Core", "FoodRecipesApi.Core\FoodRecipesApi.Core.csproj", "{C0147E1D-C583-4BF9-813B-E72F865A6AE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodRecipesApi.Core", "FoodRecipesApi.Core\FoodRecipesApi.Application.csproj", "{C0147E1D-C583-4BF9-813B-E72F865A6AE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodRecipesApi.Domain", "FoodRecipesApi.Domain\FoodRecipesApi.Domain.csproj", "{D94C95B8-70AD-48EC-AD9E-624067099600}"
 EndProject
