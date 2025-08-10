@@ -21,7 +21,8 @@ namespace FoodRecipesApi.Domain.Entities
         public TimeSpan PreparationTime { get; set; }
         public TimeSpan TotalTime { get; set; }
         public ICollection<Ingredient> Ingredients { get; set; }
-        public ICollection<RecipeIngredient> RecipeIngredients{ get; set; }
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        
 
     }
 }
