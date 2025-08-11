@@ -18,7 +18,7 @@ namespace FoodRecipesApi.Persistence.Configuration
                 .IsRequired();
 
             builder.HasMany(r => r.RecipeSteps) // each Recipe has MANY RecipeStep
-                .WithOne(rs => rs.Recipe) // each RecipeStep has ONE Recipe
+                .WithOne(rs => rs.Recipe) // each RecipeStep m has ONE Recipe
                 .HasForeignKey(rs => rs.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .IsRequired();
