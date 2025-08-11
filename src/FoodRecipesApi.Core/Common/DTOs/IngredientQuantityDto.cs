@@ -9,6 +9,6 @@ namespace FoodRecipesApi.Core.Common.DTOs
     public class IngredientQuantityDto
     {
         public float Amount { get; set; }
-        public MeasurementUnit MeasurementUnit { get; set; }
+        public string? MeasurementUnit { get; set; }
     }
 }
