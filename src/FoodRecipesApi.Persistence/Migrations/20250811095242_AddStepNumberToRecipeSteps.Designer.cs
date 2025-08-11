@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodRecipesApi.Persistence.Migrations
 {
     [DbContext(typeof(FoodRecipesDbContext))]
-    [Migration("20250811071907_UpdateDBFromSerAuthorBornPropColToTypeDate")]
-    partial class UpdateDBFromSerAuthorBornPropColToTypeDate
+    [Migration("20250811095242_AddStepNumberToRecipeSteps")]
+    partial class AddStepNumberToRecipeSteps
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,6 +77,9 @@ namespace FoodRecipesApi.Persistence.Migrations
 
                     b.HasKey("IngredientId");
 
+                    b.HasIndex("QuantityId")
+                        .IsUnique();
+
                     b.HasIndex("RecipeId");
 
                     b.ToTable("Ingredient");
@@ -90,19 +93,16 @@ namespace FoodRecipesApi.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientQuantityId"));
 
-                    b.Property<float>("Amount")
-                        .HasColumnType("real");
-
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<int>("MeasurementUnitId")
                         .HasColumnType("int");
 
                     b.HasKey("IngredientQuantityId");
 
-                    b.HasIndex("IngredientId")
-                        .IsUnique();
+                    b.HasIndex("MeasurementUnitId");
 
                     b.ToTable("IngredientQuantity");
                 });
@@ -115,9 +115,6 @@ namespace FoodRecipesApi.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MeasurementUnitId"));
 
-                    b.Property<int>("IngredientQuantityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasMaxLength(15)
@@ -125,7 +122,7 @@ namespace FoodRecipesApi.Persistence.Migrations
 
                     b.HasKey("MeasurementUnitId");
 
-                    b.HasIndex("IngredientQuantityId")
+                    b.HasIndex("Unit")
                         .IsUnique();
 
                     b.ToTable("MeasurementUnit");
@@ -206,6 +203,9 @@ namespace FoodRecipesApi.Persistence.Migrations
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StepNumber")
+                        .HasColumnType("int");
+
                     b.HasKey("RecipeStepId");
 
                     b.HasIndex("RecipeId");
@@ -215,31 +215,28 @@ namespace FoodRecipesApi.Persistence.Migrations
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.Ingredient", b =>
                 {
+                    b.HasOne("FoodRecipesApi.Domain.Entities.IngredientQuantity", "Quantity")
+                        .WithOne("Ingredient")
+                        .HasForeignKey("FoodRecipesApi.Domain.Entities.Ingredient", "QuantityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FoodRecipesApi.Domain.Entities.Recipe", null)
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId");
+
+                    b.Navigation("Quantity");
                 });
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.IngredientQuantity", b =>
                 {
-                    b.HasOne("FoodRecipesApi.Domain.Entities.Ingredient", "Ingredient")
-                        .WithOne("Quantity")
-                        .HasForeignKey("FoodRecipesApi.Domain.Entities.IngredientQuantity", "IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("FoodRecipesApi.Domain.Entities.MeasurementUnit", "MeasurementUnit")
+                        .WithMany("IngredientQuantities")
+                        .HasForeignKey("MeasurementUnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Ingredient");
-                });
-
-            modelBuilder.Entity("FoodRecipesApi.Domain.Entities.MeasurementUnit", b =>
-                {
-                    b.HasOne("FoodRecipesApi.Domain.Entities.IngredientQuantity", "IngredientQuantity")
-                        .WithOne("MeasurementUnit")
-                        .HasForeignKey("FoodRecipesApi.Domain.Entities.MeasurementUnit", "IngredientQuantityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IngredientQuantity");
+                    b.Navigation("MeasurementUnit");
                 });
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.Recipe", b =>
@@ -290,15 +287,18 @@ namespace FoodRecipesApi.Persistence.Migrations
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.Ingredient", b =>
                 {
-                    b.Navigation("Quantity")
-                        .IsRequired();
-
                     b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.IngredientQuantity", b =>
                 {
-                    b.Navigation("MeasurementUnit");
+                    b.Navigation("Ingredient")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FoodRecipesApi.Domain.Entities.MeasurementUnit", b =>
+                {
+                    b.Navigation("IngredientQuantities");
                 });
 
             modelBuilder.Entity("FoodRecipesApi.Domain.Entities.Recipe", b =>

@@ -28,6 +28,19 @@ namespace FoodRecipesApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MeasurementUnit",
+                columns: table => new
+                {
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Unit = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MeasurementUnit", x => x.MeasurementUnitId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
                 {
@@ -37,8 +50,8 @@ namespace FoodRecipesApi.Persistence.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     AuthorId = table.Column<int>(type: "int", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    PreparationTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    TotalTime = table.Column<TimeSpan>(type: "time", nullable: false)
+                    PreparationTimeInMinutes = table.Column<int>(type: "int", nullable: false),
+                    TotalTimeInMinutes = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,23 +65,23 @@ namespace FoodRecipesApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ingredient",
+                name: "IngredientQuantity",
                 columns: table => new
                 {
-                    IngredientId = table.Column<int>(type: "int", nullable: false)
+                    IngredientQuantityId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    QuantityId = table.Column<int>(type: "int", nullable: false),
-                    RecipeId = table.Column<int>(type: "int", nullable: true)
+                    Amount = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    MeasurementUnitId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ingredient", x => x.IngredientId);
+                    table.PrimaryKey("PK_IngredientQuantity", x => x.IngredientQuantityId);
                     table.ForeignKey(
-                        name: "FK_Ingredient_Recipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "Recipes",
-                        principalColumn: "RecipeId");
+                        name: "FK_IngredientQuantity_MeasurementUnit_MeasurementUnitId",
+                        column: x => x.MeasurementUnitId,
+                        principalTable: "MeasurementUnit",
+                        principalColumn: "MeasurementUnitId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,24 +106,29 @@ namespace FoodRecipesApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IngredientQuantity",
+                name: "Ingredient",
                 columns: table => new
                 {
-                    IngredientQuantityId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Amount = table.Column<float>(type: "real", nullable: false),
-                    MeasurementUnit = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     IngredientId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    QuantityId = table.Column<int>(type: "int", nullable: false),
+                    RecipeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IngredientQuantity", x => x.IngredientQuantityId);
+                    table.PrimaryKey("PK_Ingredient", x => x.IngredientId);
                     table.ForeignKey(
-                        name: "FK_IngredientQuantity_Ingredient_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredient",
-                        principalColumn: "IngredientId",
+                        name: "FK_Ingredient_IngredientQuantity_QuantityId",
+                        column: x => x.QuantityId,
+                        principalTable: "IngredientQuantity",
+                        principalColumn: "IngredientQuantityId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ingredient_Recipes_RecipeId",
+                        column: x => x.RecipeId,
+                        principalTable: "Recipes",
+                        principalColumn: "RecipeId");
                 });
 
             migrationBuilder.CreateTable(
@@ -138,14 +156,25 @@ namespace FoodRecipesApi.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ingredient_QuantityId",
+                table: "Ingredient",
+                column: "QuantityId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Ingredient_RecipeId",
                 table: "Ingredient",
                 column: "RecipeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IngredientQuantity_IngredientId",
+                name: "IX_IngredientQuantity_MeasurementUnitId",
                 table: "IngredientQuantity",
-                column: "IngredientId",
+                column: "MeasurementUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MeasurementUnit_Unit",
+                table: "MeasurementUnit",
+                column: "Unit",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -168,9 +197,6 @@ namespace FoodRecipesApi.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IngredientQuantity");
-
-            migrationBuilder.DropTable(
                 name: "RecipeIngredient");
 
             migrationBuilder.DropTable(
@@ -180,7 +206,13 @@ namespace FoodRecipesApi.Persistence.Migrations
                 name: "Ingredient");
 
             migrationBuilder.DropTable(
+                name: "IngredientQuantity");
+
+            migrationBuilder.DropTable(
                 name: "Recipes");
+
+            migrationBuilder.DropTable(
+                name: "MeasurementUnit");
 
             migrationBuilder.DropTable(
                 name: "Authors");

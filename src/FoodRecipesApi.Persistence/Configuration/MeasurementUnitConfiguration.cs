@@ -12,13 +12,20 @@ namespace FoodRecipesApi.Persistence.Configuration
     {
         public void Configure(EntityTypeBuilder<MeasurementUnit> builder)
         {
-            builder.HasOne(mu => mu.IngredientQuantity) // each MeasurementUnit has ONE Ingredient
-                .WithOne(iq => iq.MeasurementUnit) // each IngredientQuantity has ONE MeasureUnit
-                .HasForeignKey<MeasurementUnit>(mu => mu.IngredientQuantityId);
+            builder.HasKey(mu => mu.MeasurementUnitId);
 
             builder.Property(mu => mu.Unit)
                 .HasMaxLength(15)
                 .IsRequired();
+
+            builder.HasMany(mu => mu.IngredientQuantities)
+                .WithOne(iq => iq.MeasurementUnit)
+                .HasForeignKey(iq => iq.MeasurementUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Optional: prevent duplicate unit names
+            builder.HasIndex(mu => mu.Unit).IsUnique();
         }
     }
+
 }

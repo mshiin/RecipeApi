@@ -12,14 +12,14 @@ namespace FoodRecipesApi.Persistence.Configuration
         {
         public void Configure(EntityTypeBuilder<IngredientQuantity> builder)
         {
-            builder.HasOne(iq => iq.Ingredient) // each IngredientQuantity has ONE Ingredient
-                .WithOne(i => i.Quantity) // each Ingredient has ONE IngredientQuantity
-                .HasForeignKey<IngredientQuantity>(i => i.IngredientId)
+            builder.HasKey(iq => iq.IngredientQuantityId);
+            builder.Property(iq => iq.Amount)
+                .HasPrecision(10, 2)
                 .IsRequired();
-
-            builder.HasOne(iq => iq.MeasurementUnit) // each IngredientQuantity has ONE MeasurementUnit
-                .WithOne(mu => mu.IngredientQuantity) // each MeasurementUnit has ONE IngredientQuantity
-                .HasForeignKey<IngredientQuantity>(iq => iq.MeasurementUnitId);
-            }
+            builder.HasOne(iq => iq.MeasurementUnit)
+                .WithMany(mu => mu.IngredientQuantities)
+                .HasForeignKey(iq => iq.MeasurementUnitId)
+                .OnDelete(DeleteBehavior.Restrict); // avoid nuking lookup rows
+        }
         }
     }
