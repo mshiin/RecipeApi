@@ -20,8 +20,8 @@ namespace FoodRecipesApi.Core.Common.Queries.GetAllRecipes
             _context = context;
             _logger = logger;
         }
-   public async Task<List<RecipeDto>> Handle(GetAllRecipesQuery request, CancellationToken cancellationToken)
-        {
+        public async Task<List<RecipeDto>> Handle(GetAllRecipesQuery request, CancellationToken cancellationToken)
+            {
             try
             {
                 return await _context.Recipes
@@ -62,7 +62,7 @@ namespace FoodRecipesApi.Core.Common.Queries.GetAllRecipes
                 _logger.LogError(ex, "Failed to get recipes");
                 throw; 
             }
-        }
+            }
 
     }
 }
