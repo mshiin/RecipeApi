@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FoodRecipesApi.Core.Common.Interfaces;
+using FoodRecipesApi.Core.Common.Mappers.Implementations;
+using FoodRecipesApi.Core.Common.Mappers.Interfaces;
 using FoodRecipesApi.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +43,7 @@ namespace FoodRecipesApi.WebApi
             services.AddControllers();
             services.AddPersistence(Configuration);
             services.AddApplication();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
