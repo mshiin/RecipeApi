@@ -28,11 +28,21 @@ namespace FoodRecipesApi.Core.Common.Queries.GetAllRecipes
         }
         public async Task<List<RecipeDto>> Handle(GetAllRecipesQuery request, CancellationToken ct)
         {
-            return await _context.Recipes
-                .AsNoTracking()
-                .Select(_mapper.ToDtoSelector())   // projected in SQL
-                .ToListAsync(ct);
+            try
+            {
+                var recipes = await _context.Recipes
+                   .AsNoTracking()
+                   .Select(_mapper.ToDtoSelector())   // projected in SQL
+                   .ToListAsync(ct);
+                return recipes;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
         }
+        
 
     }
 }
